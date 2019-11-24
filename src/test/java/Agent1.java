@@ -35,12 +35,14 @@ public class Agent1 {
         // game loop
         while (true) {
             ArrayList<Unit> myUnits = new ArrayList<>();
+            ArrayList<Unit> oppUnits = new ArrayList<>();
             char myChar = playerId == 0 ? 'w' : 'b';
             for (int y = 4; y >= 0; y--) {
                 String board = in.nextLine();
                 System.err.println(board);
                 for (int x = 0; x < board.length(); x++) {
                     if (board.toLowerCase().charAt(x) == myChar) myUnits.add(new Unit(x, y));
+                    else if (board.charAt(x) != '.') oppUnits.add(new Unit(x, y));
                 }
             }
             ArrayList<Action> actions = new ArrayList<>();
@@ -67,6 +69,7 @@ public class Agent1 {
             ArrayList<String> moves = new ArrayList<>();
             moves.add(actions.get(0).id + " PASS");
             moves.add(actions.get(actions.size() - 1).id + " PASS");
+            boolean kill = false;
             for (Unit unit : myUnits) {
                 for (Action action : actions) {
                     int targetX = unit.x + action.x;
@@ -76,12 +79,16 @@ public class Agent1 {
                     for (Unit my : myUnits) {
                         if (my.x == targetX && my.y == targetY) occupied = true;
                     }
+                    kill = oppUnits.stream().anyMatch(o -> o.x == targetX && o.y == targetY);
+                    if (kill) moves.clear();
                     if (!occupied)
                         moves.add(action.id + " " + (char) (unit.x + 'A') + (char) (unit.y + '1') + (char) (targetX + 'A') + (char) (targetY + '1'));
+                    if (kill) break;
                 }
+                if (kill) break;
             }
 
-            System.out.println(moves.get(random.nextInt(moves.size())) + " moving the warrior");
+            System.out.println(moves.get(random.nextInt(moves.size())) + (kill ? " killing" : " moving") + " the warrior");
         }
     }
 }
