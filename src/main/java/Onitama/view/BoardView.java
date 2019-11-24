@@ -6,6 +6,7 @@ import com.codingame.game.Player;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
+import com.codingame.gameengine.module.entities.Rectangle;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 
 import java.util.List;
@@ -22,8 +23,11 @@ public class BoardView {
 
         Group boardGroup = graphics.createGroup().setX(200).setY((1080 - 150 * Board.SIZE) / 2);
         boardGroup.add(graphics.createSprite().setImage("board.png").setScale(1.45).setX(-135).setY(-137));
-        boardGroup.add(graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(100).setHeight(100).setX(370).setY(2).setAlpha(0.3).setFillColor(players.get(1).getColor()));
-        boardGroup.add(graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(100).setHeight(100).setX(370).setY(602).setAlpha(0.3).setFillColor(players.get(0).getColor()));
+        Rectangle shrane0 =graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(100).setHeight(100).setX(370).setY(602).setAlpha(0.3).setFillColor(players.get(0).getColor());
+        Rectangle shrane1 = graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(100).setHeight(100).setX(370).setY(2).setAlpha(0.3).setFillColor(players.get(1).getColor());
+        boardGroup.add(shrane0, shrane1);
+        tooltips.setTooltipText(shrane0, "Shrane\nOwner: 0");
+        tooltips.setTooltipText(shrane1, "Shrane\nOwner: 1");
 
         for (int x = 0; x < board.SIZE; x++) {
             for (int y = 0; y < board.SIZE; y++) {

@@ -64,6 +64,7 @@ public class CardView {
         this.y = toTake.y;
         toTake.x = thisX;
         toTake.y = thisY;
+        graphics.commitEntityState(0.5, this.group, toTake.group);
         this.setLocation(true, true);
         toTake.setLocation(false, false);
     }
