@@ -67,8 +67,8 @@ public class FigureView {
         graphics.commitEntityState(0, sprite);
         sprite.setAlpha(0);
         tooltips.setTooltipText(sprite, "");
-        if (figure.isMaster()) gameManager.addTooltip(figure.getOwner(), String.format("%s captured the opponent master and won the game", killer.getNicknameToken()));
-        else gameManager.addTooltip(figure.getOwner(), String.format("%s captured a student", killer.getNicknameToken()));
+        if (figure.isMaster()) gameManager.addTooltip(killer, String.format("%s captured the opponent master and won the game", killer.getNicknameToken()));
+        else gameManager.addTooltip(killer, String.format("%s captured a student", killer.getNicknameToken()));
     }
 
     public void move(boolean attack) {
