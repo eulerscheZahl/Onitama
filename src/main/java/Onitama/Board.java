@@ -131,12 +131,20 @@ public class Board {
             }
         }
 
-        if (masters[0] == null || masters[0].getCell().getX() == SIZE / 2 && masters[0].getCell().getY() == SIZE - 1) {
+        if (masters[0] == null) {
             players.get(1).setScore(1);
             return true;
         }
-        if (masters[1] == null || masters[1].getCell().getX() == SIZE / 2 && masters[1].getCell().getY() == 0) {
+        if (masters[0].getCell().getX() == SIZE / 2 && masters[0].getCell().getY() == SIZE - 1) {
             players.get(0).setScore(1);
+            return true;
+        }
+        if (masters[1] == null) {
+            players.get(0).setScore(1);
+            return true;
+        }
+        if (masters[1].getCell().getX() == SIZE / 2 && masters[1].getCell().getY() == 0) {
+            players.get(1).setScore(1);
             return true;
         }
 
