@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Agent1 {
+class Player {
 
     public static void main(String args[]) {
         class Unit {

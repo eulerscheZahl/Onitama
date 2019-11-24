@@ -7,10 +7,7 @@
       <span>The Goal</span>
     </h1>
     <div class="statement-goal-content">
-      The aim of this game is to win.
-      <br>
-      <br>
-      For this question, you will be asked to output a single line as a solution.
+      The goal is to reach the opponent shrine with your master or to capture the opponent master.
     </div>
   </div>
   <!-- RULES -->
@@ -20,23 +17,14 @@
       <span>Rules</span>
     </h1>
     <div>
-      <div class="statement-rules-content">Your program receives characters.<br>
-        Your actions have an effect.<br>
-        <br>
-        The game zone works as follows:
-        <ul>
-          <li>There are coordinates.</li>
-        </ul>
-        <br>
-        The units work as follows:
-        <ul>
-          <li>They move around.</li>
-        </ul>
-        You <strong>lose</strong> if:
-        <ul>
-          <li>You mess up.</li>
-          <li>You do not supply a valid sequence of actions.</li>
-        </ul>
+      <div class="statement-rules-content">
+        Onitama is played on a <const>5</const>x<const>5</const> board. Each player has <const>1</const> master and <const>4</const> students. The players have to protect a shrine, which is at the starting cell of their master.<br><br>
+        <strong>Cards</strong><br>
+        Each player has <const>2</const> cards. A 5th card is in between both players. When a player uses one of his cards, he places it in the center and gets the other card from the center in return. <br>
+        A card gives a set of <const>2</const> to <const>4</const> possible move actions. <br> <br>
+        <strong>Moving units</strong>
+        To move a unit, a player select one of his cards. He then chooses a move pattern defined by the card and applies it to a figure of his choice. <br>
+        The destination field must either be free or occupend by an opponent. The opponent on that cell will than get eliminated from the game. <br>
       </div>
     </div>
   </div>
@@ -47,38 +35,7 @@
       <span>Expert Rules</span>
     </h1>
     <div class="statement-expert-rules-content">
-      If you're going to run local simulations, you'll need to know this!
-    </div>
-  </div>
-  <!-- EXAMPLES -->
-  <div class="statement-section statement-examples">
-    <h1>
-      <span class="icon icon-example">&nbsp;</span>
-      <span>Example</span>
-    </h1>
-
-    <div class="statement-examples-text">
-      A basic situation, an instruction, a result.
-    </div>
-
-  </div>
-  <!-- WARNING -->
-  <div class="statement-section statement-warning">
-    <h1>
-      <span class="icon icon-warning">&nbsp;</span>
-      <span>Note</span>
-    </h1>
-    <div class="statement-warning-content">
-      <b>Don’t forget to run the tests by launching them from the “Test cases” window</b>. You can submit at any time
-      to recieve a score against the training validators. <b>You can submit as many times as you like</b>. Your most
-      recent submission will be used for the final ranking.<br>
-      <br>
-      <strong>Warning:</strong> the validation tests used to compute the final score are not the same as the ones used
-      during the event.
-      Harcoded solutions will not score highly.<br>
-      <br>
-      Don't hesitate to change the viewer's options to help debug your code (<img style="opacity:.8;background:#20252a;"
-        height="18" src="https://www.codingame.com/servlet/fileservlet?id=3463235186409" width="18">).
+      You can find the sourcecode of the game on <a href="https://github.com/eulerscheZahl/onitama">https://github.com/eulerscheZahl/onitama</a>
     </div>
   </div>
   <!-- PROTOCOL -->
@@ -89,15 +46,65 @@
     </h1>
     <!-- Protocol block -->
     <div class="blk">
-      <div class="text">The program must first read the initialization data from standard input. Then, provide to the
-        standard output one line with ...</div>
+      <div class="title">Initial input</div>
+      <div class="text">In the first turn you are given your <var>playerId</var>, which is <const>0</const> or <const>1</const>.</div>
     </div>
 
     <!-- Protocol block -->
     <div class="blk">
-      <div class="title">Input</div>
+      <div class="title">Input per turn</div>
       <div class="text">
-        <p><span class="statement-lineno">Line 1: </span>one string <var>...</var>, the ...</p>
+        <p><span class="statement-lineno">Line 1 - 5:</span> the current board. A line consists of <const>5</const> characers. The characters can be:
+        <ul>
+          <li>
+            <const>.</const>: empty cell <br>
+          </li>
+        <li>
+          <const>W</const>: the master of player 0<br>
+        </li>
+        <li>
+          <const>B</const>: the master of player 1<br>
+        </li>
+        <li>
+          <const>w</const>: a student of player 0<br>
+        </li>
+        <li>
+          <const>b</const>: a student of player 1<br>
+        </li>
+        </ul></p>
+        <p><span class="statement-lineno">Line 6 - 10:</span> the cards in use. A card is defined by:
+        <ul>
+          <li>
+            <const>owner</const>: <const>0</const> or <const>1</const> for the player, <const>-1</const> for the card in the center<br>
+          </li>
+          <li>
+            <const>cardId</const>: the id of the card<br>
+          </li>
+        <li>
+          <const>dx1</const>: the x movement of the first action<br>
+        </li>
+        <li>
+          <const>dy1</const>: the y movement of the first action<br>
+        </li>
+        <li>
+          <const>dx2</const>: the x movement of the second action<br>
+        </li>
+        <li>
+          <const>dy2</const>: the y movement of the second action<br>
+        </li>
+        <li>
+          <const>dx3</const>: the x movement of the third action<br>
+        </li>
+        <li>
+          <const>dy3</const>: the y movement of the third action<br>
+        </li>
+        <li>
+          <const>dx4</const>: the x movement of the fourth action<br>
+        </li>
+        <li>
+          <const>dy4</const>: the y movement of the fourth action<br>
+        </li>
+        </ul></p>
       </div>
     </div>
 
@@ -105,7 +112,8 @@
     <div class="blk">
       <div class="title">Output</div>
       <div class="text">
-        <span class="statement-lineno">A single line</span> containing ...
+        <span class="statement-lineno">A single line</span> <command>cardID MOVE message</command> <br>
+        MOVE can be either a movement, giving source and destination cell (e.g. <command>A2B3</command> will move the figure from A2 to the cell B3) or <command>PASS</command> to perform no action.
         <br>
       </div>
     </div>
@@ -113,20 +121,10 @@
     <!-- Protocol block -->
     <div class="blk">
       <div class="title">Constraints</div>
-      <div class="text"><var>...</var> contains between 1 and 500 characters.<br>
-        <br>Allotted response time to output
-        is ≤ <const>2</const> seconds.</div>
+      <div class="text">Allotted response time to output is &le; <const>50 ms</const>.</div>
     </div>
   </div>
-  <!-- STORY -->
-  <div class="statement-story-background">
-    <div class="statement-story-cover" style="background-size: cover; background-image: url(https://www.codingame.com/servlet/fileservlet?id=2210505809934)">
-      <div class="statement-story" style="min-height: 300px; position: relative">
-        <h1>Title</h1>
-        <div class="story-text">Story
-          <br>
-          Totally optional</div>
-      </div>
-    </div>
-  </div>
+  <strong>Asset resources:</strong> <br>
+  <a href="https://craftpix.net/freebies/wizard-character-free-sprite/">https://craftpix.net/freebies/wizard-character-free-sprite/</a> <br>
+  <a href="https://craftpix.net/freebies/knight-character-free-sprite/">https://craftpix.net/freebies/knight-character-free-sprite/</a>
 </div>

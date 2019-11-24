@@ -1,0 +1,7 @@
+read playerID:int
+
+gameloop
+loop 5 read board:string(7)
+loop 5 read owner:int cardId:int dx1:int dy1:int dx2:int dy2:int dx3:int dy3:int dx4:int dy4:int
+
+write 1 A1B2 moving the student
