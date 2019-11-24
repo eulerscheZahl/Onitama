@@ -38,11 +38,11 @@ public class Card {
         return yMove;
     }
 
-    @Override
-    public String toString() {
+    public String print(boolean rotated) {
+        int factor = rotated ? -1 : 1;
         String result = String.valueOf(cardId);
         for (int i = 0; i < 4; i++) {
-            if (i < xMove.size()) result += " " + xMove.get(i) + " " + yMove.get(i);
+            if (i < xMove.size()) result += " " + factor * xMove.get(i) + " " + factor * yMove.get(i);
             else result += " 0 0";
         }
         return result;

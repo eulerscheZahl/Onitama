@@ -59,7 +59,7 @@ public class Board {
         middleCard = cardSet.get(4);
     }
 
-    public ArrayList<String> printState() {
+    public ArrayList<String> printState(Player player) {
         ArrayList<String> result = new ArrayList<>();
         for (int y = SIZE - 1; y >= 0; y--) {
             String line = "";
@@ -68,9 +68,9 @@ public class Board {
             }
             result.add(line);
         }
-        for (Card card : playerCards.get(0)) result.add("0 " + card.toString());
-        for (Card card : playerCards.get(1)) result.add("1 " + card.toString());
-        result.add("-1 " + middleCard.toString());
+        for (Card card : playerCards.get(0)) result.add("0 " + card.print(false));
+        for (Card card : playerCards.get(1)) result.add("1 " + card.print(true));
+        result.add("-1 " + middleCard.print(player.getIndex() == 1));
         return result;
     }
 

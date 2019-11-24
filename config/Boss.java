@@ -57,11 +57,10 @@ class Player {
                 int dy4 = in.nextInt();
                 System.err.println(owner + " " + cardId + " " + dx1 + " " + dy1 + " " + dx2 + " " + dy2 + " " + dx3 + " " + dy3 + " " + dx4 + " " + dy4);
                 if (owner != playerId) continue;
-                int factor = playerId == 0 ? 1 : -1;
-                if (dx1 != 0 || dy1 != 0) actions.add(new Action(cardId, dx1 * factor, dy1 * factor));
-                if (dx2 != 0 || dy2 != 0) actions.add(new Action(cardId, dx2 * factor, dy2 * factor));
-                if (dx3 != 0 || dy3 != 0) actions.add(new Action(cardId, dx3 * factor, dy3 * factor));
-                if (dx4 != 0 || dy4 != 0) actions.add(new Action(cardId, dx4 * factor, dy4 * factor));
+                if (dx1 != 0 || dy1 != 0) actions.add(new Action(cardId, dx1, dy1));
+                if (dx2 != 0 || dy2 != 0) actions.add(new Action(cardId, dx2, dy2));
+                if (dx3 != 0 || dy3 != 0) actions.add(new Action(cardId, dx3, dy3));
+                if (dx4 != 0 || dy4 != 0) actions.add(new Action(cardId, dx4, dy4));
             }
             in.nextLine();
 

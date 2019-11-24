@@ -39,7 +39,7 @@ public class Referee extends AbstractReferee {
         Player player = gameManager.getPlayer(turn % 2);
         Player opponent = gameManager.getPlayer((turn+1) % 2);
         if (turn < 2) player.sendInputLine(String.valueOf(player.getIndex()));
-        for (String line : board.printState()) player.sendInputLine(line);
+        for (String line : board.printState(player)) player.sendInputLine(line);
         player.execute();
 
         try {
@@ -50,6 +50,7 @@ public class Referee extends AbstractReferee {
                 String action = match.group("action");
                 String message = match.group("message");
                 board.play(player, cardId, action);
+                player.setText(message);
                 if (board.hasWinner(gameManager, gameManager.getPlayers())) gameManager.endGame();
             } else throw new Exception(outputs.get(0));
         } catch (TimeoutException e) {
