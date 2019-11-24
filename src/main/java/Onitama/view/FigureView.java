@@ -3,6 +3,8 @@ package Onitama.view;
 import Onitama.Board;
 import Onitama.Figure;
 import com.codingame.game.Player;
+import com.codingame.gameengine.core.GameManager;
+import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.entities.Group;
 import com.codingame.gameengine.module.entities.Sprite;
@@ -19,6 +21,7 @@ public class FigureView {
     private GraphicEntityModule graphics;
     private TooltipModule tooltips;
     private SpriteAnimation sprite;
+    private MultiplayerGameManager<Player> gameManager;
 
     private String[] getSprites(int line) {
         String[] sheet = spritesK0;
@@ -28,13 +31,21 @@ public class FigureView {
 
         String[] result = new String[6];
         for (int i = 0; i < 5; i++) result[i] = sheet[5 * line + i];
-        result[5] = line == 5? result[4] : sheet[0];
+        result[5] = line == 5 ? result[4] : sheet[0];
         return result;
     }
 
-    public FigureView(Figure figure, Group boardGroup, GraphicEntityModule graphicEntityModule, TooltipModule tooltipModule) {
+    private String getTooltipText() {
+        String result = figure.isMaster() ? "Master" : "Student";
+        result += "\nowner: " + figure.getOwner().getIndex();
+        result += "\ncell: " + figure.getCell().printCoord();
+        return result;
+    }
+
+    public FigureView(Figure figure, MultiplayerGameManager<Player> gameManager, Group boardGroup, GraphicEntityModule graphicEntityModule, TooltipModule tooltipModule) {
         this.figure = figure;
         figure.setView(this);
+        this.gameManager = gameManager;
         this.graphics = graphicEntityModule;
         this.tooltips = tooltipModule;
 
@@ -48,12 +59,16 @@ public class FigureView {
                 setImages(getSprites(0)).setScale(0.7).setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150)
                 .setLoop(true).play();
         boardGroup.add(sprite);
+        tooltips.setTooltipText(sprite, getTooltipText());
     }
 
-    public void kill() {
+    public void kill(Player killer) {
         sprite.reset().setImages(getSprites(5)).setLoop(false).play();
         graphics.commitEntityState(0, sprite);
         sprite.setAlpha(0);
+        tooltips.setTooltipText(sprite, "");
+        if (figure.isMaster()) gameManager.addTooltip(figure.getOwner(), String.format("%s captured the opponent master and won the game", killer.getNicknameToken()));
+        else gameManager.addTooltip(figure.getOwner(), String.format("%s captured a student", killer.getNicknameToken()));
     }
 
     public void move(boolean attack) {
@@ -61,5 +76,6 @@ public class FigureView {
         graphics.commitEntityState(0, sprite);
         sprite.setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150);
         sprite.reset().setImages(getSprites(0)).setLoop(true).play();
+        tooltips.setTooltipText(sprite, getTooltipText());
     }
 }

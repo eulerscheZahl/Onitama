@@ -26,8 +26,12 @@ public class Cell {
         return y;
     }
 
+    public String printCoord() {
+        return "" + (char)(x+'A') + (char)(y+'1');
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         if (figure == null) return ".";
         return figure.toString();
     }

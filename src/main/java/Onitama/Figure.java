@@ -30,15 +30,15 @@ public class Figure {
 
     public void moveTo(Cell to) {
         this.cell.setFigure(null);
-        if (to.getFigure() != null) to.getFigure().kill();
+        if (to.getFigure() != null) to.getFigure().kill(this.getOwner());
         boolean attack = to.getFigure() != null;
         to.setFigure(this);
         this.cell = to;
         view.move(attack);
     }
 
-    private void kill() {
-        view.kill();
+    private void kill(Player killer) {
+        view.kill(killer);
     }
 
     @Override

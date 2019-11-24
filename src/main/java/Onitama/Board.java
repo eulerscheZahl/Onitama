@@ -1,6 +1,7 @@
 package Onitama;
 
 import com.codingame.game.Player;
+import com.codingame.gameengine.core.MultiplayerGameManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +87,10 @@ public class Board {
             throw new Exception("Player " + player.getIndex() + " does not own a card with ID " + cardId);
 
         if (!move.equals("PASS")) {
-            int yFrom = move.charAt(0) - 'A';
-            int xFrom = move.charAt(1) - '1';
-            int yTo = move.charAt(2) - 'A';
-            int xTo = move.charAt(3) - '1';
+            int xFrom = move.charAt(0) - 'A';
+            int yFrom = move.charAt(1) - '1';
+            int xTo = move.charAt(2) - 'A';
+            int yTo = move.charAt(3) - '1';
             if (!inGrid(xFrom, yFrom)) throw new Exception("Source field isn't on the grid");
             if (!inGrid(xTo, yTo)) throw new Exception("Destination field isn't on the grid");
             int dx = xTo - xFrom;
@@ -122,7 +123,7 @@ public class Board {
         return playerCards.get(player).get(number);
     }
 
-    public boolean hasWinner(List<Player> players) {
+    public boolean hasWinner(MultiplayerGameManager<Player> gameManager, List<Player> players) {
         Figure[] masters = new Figure[2];
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
@@ -137,6 +138,7 @@ public class Board {
         }
         if (masters[0].getCell().getX() == SIZE / 2 && masters[0].getCell().getY() == SIZE - 1) {
             players.get(0).setScore(1);
+            gameManager.addTooltip(players.get(0), String.format("%s reached the opponent shrine", players.get(0).getNicknameToken()));
             return true;
         }
         if (masters[1] == null) {
@@ -145,6 +147,7 @@ public class Board {
         }
         if (masters[1].getCell().getX() == SIZE / 2 && masters[1].getCell().getY() == 0) {
             players.get(1).setScore(1);
+            gameManager.addTooltip(players.get(1), String.format("%s reached the opponent shrine", players.get(1).getNicknameToken()));
             return true;
         }
 

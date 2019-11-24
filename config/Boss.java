@@ -78,7 +78,7 @@ class Player {
                         if (my.x == targetX && my.y == targetY) occupied = true;
                     }
                     if (!occupied)
-                        moves.add(action.id + " " + (char) (unit.y + 'A') + (char) (unit.x + '1') + (char) (targetY + 'A') + (char) (targetX + '1'));
+                        moves.add(action.id + " " + (char) (unit.x + 'A') + (char) (unit.y + '1') + (char) (targetX + 'A') + (char) (targetY + '1'));
                 }
             }
 

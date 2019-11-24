@@ -11,6 +11,7 @@ public class SkeletonMain {
         // Another way to add a player
         // gameRunner.addAgent("python3 /home/user/player.py");
 
+        //gameRunner.setSeed(-6995760831045398500L);
         gameRunner.start();
     }
 }

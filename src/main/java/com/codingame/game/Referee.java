@@ -30,7 +30,7 @@ public class Referee extends AbstractReferee {
     @Override
     public void init() {
         board = new Board(gameManager.getPlayers(), new Random(gameManager.getSeed()));
-        BoardView view = new BoardView(board, graphicEntityModule, tooltipModule, gameManager.getPlayers());
+        BoardView view = new BoardView(board, gameManager, graphicEntityModule, tooltipModule, gameManager.getPlayers());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Referee extends AbstractReferee {
                 String action = match.group("action");
                 String message = match.group("message");
                 board.play(player, cardId, action);
-                if (board.hasWinner(gameManager.getPlayers())) gameManager.endGame();
+                if (board.hasWinner(gameManager, gameManager.getPlayers())) gameManager.endGame();
             } else throw new Exception(outputs.get(0));
         } catch (TimeoutException e) {
             player.deactivate(String.format("$%d timeout!", player.getIndex()));
