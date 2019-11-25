@@ -74,8 +74,35 @@ public class Board {
         return result;
     }
 
-    public boolean inGrid(int x, int y) {
+    public static boolean inGrid(int x, int y) {
         return x >= 0 && x < SIZE && y >= 0 && y < SIZE;
+    }
+
+    public ArrayList<Action> generateActions(Player player) {
+        ArrayList<Figure> playerFigures = new ArrayList<>();
+        for (int x = 0; x < SIZE; x++) {
+            for (int y = 0; y < SIZE; y++) {
+                Figure figure = grid[x][y].getFigure();
+                if (figure != null && figure.getOwner() == player) playerFigures.add(figure);
+            }
+        }
+
+        ArrayList<Action> result = new ArrayList<>();
+        for (Card card : playerCards.get(player.getIndex())) {
+            for (int move = 0; move < card.getxMove().size(); move++) {
+                for (Figure figure : playerFigures) {
+                    Action action = new Action(card, figure, move);
+                    if (action.isValid(grid)) result.add(action);
+                }
+            }
+        }
+
+        if (result.size() == 0) {
+            for (Card card : playerCards.get(player.getIndex())) {
+                result.add(new Action(card, null, 0));
+            }
+        }
+        return result;
     }
 
     public void play(Player player, int cardId, String move) throws Exception {
@@ -84,32 +111,18 @@ public class Board {
             if (card.getCardId() == cardId) playedCard = card;
         }
         if (playedCard == null)
-            throw new Exception("Player " + player.getIndex() + " does not own a card with ID " + cardId);
+            throw new Exception("Player " + player.getNicknameToken() + " does not own a card with ID " + cardId);
 
-        if (!move.equals("PASS")) {
-            int xFrom = move.charAt(0) - 'A';
-            int yFrom = move.charAt(1) - '1';
-            int xTo = move.charAt(2) - 'A';
-            int yTo = move.charAt(3) - '1';
-            if (!inGrid(xFrom, yFrom)) throw new Exception("Source field isn't on the grid");
-            if (!inGrid(xTo, yTo)) throw new Exception("Destination field isn't on the grid");
-            int dx = xTo - xFrom;
-            int dy = yTo - yFrom;
-            if (player.getIndex() == 1) {
-                dx = -dx;
-                dy = -dy;
-            }
-            boolean validAction = dx == 0 && dy == 0;
-            for (int i = 0; i < playedCard.getxMove().size(); i++) {
-                if (playedCard.getxMove().get(i) == dx && playedCard.getyMove().get(i) == dy) validAction = true;
-            }
-            if (!validAction) throw new Exception("Card " + cardId + " does not support the move " + move);
-            if (grid[xFrom][yFrom].getFigure() == null) throw new Exception("There is no figure on the source cell");
-            if (grid[xFrom][yFrom].getFigure().getOwner() != player)
-                throw new Exception("The figure on the source cell does not belong to the player");
-            if (grid[xTo][yTo].getFigure() != null && grid[xTo][yTo].getFigure().getOwner() == player)
-                throw new Exception("You can't capture your own figures");
-            grid[xFrom][yFrom].getFigure().moveTo(grid[xTo][yTo]);
+        Action action = null;
+        for (Action a : generateActions(player)) {
+            if (a.toString().equals(cardId + " " + move)) action = a;
+        }
+        if (action == null) throw new Exception("Player " + player.getNicknameToken() + " performed an invalid action");
+        
+        if (action.getFigure() != null) {
+            Cell target = action.getTargetCell();
+            target = grid[target.getX()][target.getY()];
+            action.getFigure().moveTo(target);
         }
 
         playerCards.get(player.getIndex()).remove(playedCard);

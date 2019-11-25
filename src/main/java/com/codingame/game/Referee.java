@@ -1,9 +1,11 @@
 package com.codingame.game;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import Onitama.Action;
 import Onitama.Board;
 import Onitama.view.BoardView;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
@@ -40,6 +42,11 @@ public class Referee extends AbstractReferee {
         Player opponent = gameManager.getPlayer((turn+1) % 2);
         if (turn < 2) player.sendInputLine(String.valueOf(player.getIndex()));
         for (String line : board.printState(player)) player.sendInputLine(line);
+        ArrayList<Action> moves = board.generateActions(player);
+        player.sendInputLine(String.valueOf(moves.size()));
+        for (Action action : moves) {
+            player.sendInputLine(action.toString());
+        }
         player.execute();
 
         try {
@@ -47,7 +54,7 @@ public class Referee extends AbstractReferee {
             Matcher match = PLAYER_PATTERN.matcher(outputs.get(0));
             if (match.matches()) {
                 int cardId = Integer.parseInt(match.group("cardId"));
-                String action = match.group("action");
+                String action = match.group("action").toUpperCase();
                 String message = match.group("message");
                 board.play(player, cardId, action);
                 player.setText(message);

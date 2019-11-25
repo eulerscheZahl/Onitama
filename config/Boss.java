@@ -5,24 +5,6 @@ import java.util.Scanner;
 class Player {
 
     public static void main(String args[]) {
-        class Unit {
-            public int x, y;
-
-            public Unit(int x, int y) {
-                this.x = x;
-                this.y = y;
-            }
-        }
-
-        class Action {
-            public int id, x, y;
-
-            public Action(int id, int x, int y) {
-                this.id = id;
-                this.x = x;
-                this.y = y;
-            }
-        }
 
         Scanner in = new Scanner(System.in);
         int playerId = in.nextInt();
@@ -34,18 +16,16 @@ class Player {
 
         // game loop
         while (true) {
-            ArrayList<Unit> myUnits = new ArrayList<>();
-            ArrayList<Unit> oppUnits = new ArrayList<>();
+            ArrayList<String> oppUnits = new ArrayList<>();
             char myChar = playerId == 0 ? 'w' : 'b';
             for (int y = 4; y >= 0; y--) {
                 String board = in.nextLine();
                 System.err.println(board);
                 for (int x = 0; x < board.length(); x++) {
-                    if (board.toLowerCase().charAt(x) == myChar) myUnits.add(new Unit(x, y));
-                    else if (board.charAt(x) != '.') oppUnits.add(new Unit(x, y));
+                    if (board.toLowerCase().charAt(x) != myChar && board.charAt(x) != '.')
+                        oppUnits.add("" + (char) (x + 'A') + (char) (y + '1'));
                 }
             }
-            ArrayList<Action> actions = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 int owner = in.nextInt();
                 int cardId = in.nextInt();
@@ -58,37 +38,29 @@ class Player {
                 int dx4 = in.nextInt();
                 int dy4 = in.nextInt();
                 System.err.println(owner + " " + cardId + " " + dx1 + " " + dy1 + " " + dx2 + " " + dy2 + " " + dx3 + " " + dy3 + " " + dx4 + " " + dy4);
-                if (owner != playerId) continue;
-                if (dx1 != 0 || dy1 != 0) actions.add(new Action(cardId, dx1, dy1));
-                if (dx2 != 0 || dy2 != 0) actions.add(new Action(cardId, dx2, dy2));
-                if (dx3 != 0 || dy3 != 0) actions.add(new Action(cardId, dx3, dy3));
-                if (dx4 != 0 || dy4 != 0) actions.add(new Action(cardId, dx4, dy4));
+            }
+            int actionCount = in.nextInt();
+            System.err.println(actionCount);
+            ArrayList<String> validActions = new ArrayList<>();
+            for (int i = 0; i < actionCount; i++) {
+                int cardId = in.nextInt();
+                String move = in.next();
+                validActions.add(cardId + " " + move);
+                System.err.println(cardId + " " + move);
             }
             in.nextLine();
 
-            ArrayList<String> moves = new ArrayList<>();
-            moves.add(actions.get(0).id + " PASS");
-            moves.add(actions.get(actions.size() - 1).id + " PASS");
+            String action = null;
             boolean kill = false;
-            for (Unit unit : myUnits) {
-                for (Action action : actions) {
-                    int targetX = unit.x + action.x;
-                    int targetY = unit.y + action.y;
-                    if (targetX < 0 || targetX >= 5 || targetY < 0 || targetY >= 5) continue;
-                    boolean occupied = false;
-                    for (Unit my : myUnits) {
-                        if (my.x == targetX && my.y == targetY) occupied = true;
-                    }
-                    kill = oppUnits.stream().anyMatch(o -> o.x == targetX && o.y == targetY);
-                    if (kill) moves.clear();
-                    if (!occupied)
-                        moves.add(action.id + " " + (char) (unit.x + 'A') + (char) (unit.y + '1') + (char) (targetX + 'A') + (char) (targetY + '1'));
-                    if (kill) break;
+            for (String s : validActions) {
+                if (oppUnits.stream().anyMatch(opp -> s.endsWith(opp))) {
+                    action = s;
+                    kill = true;
                 }
-                if (kill) break;
             }
+            if (action == null) action = validActions.get(random.nextInt(validActions.size()));
 
-            System.out.println(moves.get(random.nextInt(moves.size())) + (kill ? " killing" : " moving") + " the warrior");
+            System.out.println(action + (kill ? " killing" : " moving") + " the warrior");
         }
     }
 }
