@@ -10,6 +10,6 @@ export const modules = [
 ];
 
 export const playerColors = [
-    '#ff8080',
-    '#8080ff'
+    '#ff4040',
+    '#4040ff'
 ];

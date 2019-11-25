@@ -25,6 +25,7 @@
         <strong>Moving units</strong><br>
         To move a unit, a player select one of his cards. He then chooses a move pattern defined by the card and applies it to a figure of his choice. <br>
         The destination field must either be free or occupend by an opponent. The opponent on that cell will than get eliminated from the game. <br>
+        If there is no valid move, a player can <action>PASS</action> a card of his choice, effectively changing it with the center card without moving any unit.
       </div>
     </div>
   </div>
@@ -104,7 +105,7 @@
         <li>
           <var>dy4</var>: the y movement of the fourth action<br>
         </li>
-        </ul> <br>
+        </ul>
         Note: if both <var>dx</var> and <var>dy</var> are 0, it does not denote a valid move (this is done to provide a valid code stub)</p>
         <p><span class="statement-lineno">Line 11:</span> <var>actionCount</var>the number of possible actions</p>
         <p><span class="statement-lineno">Next <var>actionCount</var> lines:</span> <var>cardId</var> <var>move</var> denoting a valid move</p>

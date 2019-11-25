@@ -10,8 +10,8 @@ public class Player extends AbstractMultiplayerPlayer {
     }
 
     public static int getColor(int player) {
-        if (player == 0) return 0xff8080;
-        return 0x8080ff;
+        if (player == 0) return 0xff4040;
+        return 0x4040ff;
     }
 
     public int getColor() {
