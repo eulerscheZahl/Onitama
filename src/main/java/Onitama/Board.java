@@ -106,11 +106,7 @@ public class Board {
     }
 
     public void play(Player player, int cardId, String move) throws Exception {
-        Card playedCard = null;
-        for (Card card : playerCards.get(player.getIndex())) {
-            if (card.getCardId() == cardId) playedCard = card;
-        }
-        if (playedCard == null)
+        if (!playerCards.get(player.getIndex()).stream().anyMatch(c -> c.getCardId() == cardId))
             throw new Exception("Player " + player.getNicknameToken() + " does not own a card with ID " + cardId);
 
         Action action = null;
@@ -118,16 +114,17 @@ public class Board {
             if (a.toString().equals(cardId + " " + move)) action = a;
         }
         if (action == null) throw new Exception("Player " + player.getNicknameToken() + " performed an invalid action");
-        
+
         if (action.getFigure() != null) {
             Cell target = action.getTargetCell();
             target = grid[target.getX()][target.getY()];
             action.getFigure().moveTo(target);
         }
 
+        Card playedCard = action.getCard();
         playerCards.get(player.getIndex()).remove(playedCard);
         playerCards.get(player.getIndex()).add(middleCard);
-        playedCard.playCard(middleCard);
+        playedCard.playCard(middleCard, action.getMove());
         middleCard = playedCard;
     }
 

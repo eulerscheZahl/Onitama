@@ -37,27 +37,29 @@ public class CardView {
 
         group = graphicEntityModule.createGroup();
         group.add(graphics.createSprite().setImage("card.png"));
-        group.add(graphics.createText(String.valueOf(card.getCardId())).setX(10).setY(10).setFontSize(70));
-        drawRect(0,0,false);
+        group.add(graphics.createText(String.valueOf(card.getCardId())).setX(50).setY(50).setAnchor(0.5).setFontSize(70));
+        drawRect(0, 0, false);
         for (int i = 0; i < card.getxMove().size(); i++) {
             int dx = card.getxMove().get(i);
             int dy = card.getyMove().get(i);
-            drawRect(dx,dy,true);
+            drawRect(dx, dy, true);
         }
-        setLocation(false, true);
+        setLocation(false, y != 1080 / 2, -1);
     }
 
-    private void setLocation(boolean rotate, boolean colorize) {
+    private void setLocation(boolean rotate, boolean colorize, int playedMove) {
         if (rotate) rotated = !rotated;
-        if (colorize) {
-            for (Rectangle rectangle : validMoves) {
-                rectangle.setFillColor(Player.getColor(rotated ? 1 : 0));
-            }
+        int color = colorize ? Player.getColor(rotated ? 1 : 0) : 0x808080;
+        for (int i = 0; i < validMoves.size(); i++) {
+            Rectangle rectangle = validMoves.get(i);
+            if (i == playedMove || playedMove == -1) graphics.commitEntityState(0.5, rectangle);
+            rectangle.setFillColor(color);
+            if (i != playedMove && playedMove != -1) graphics.commitEntityState(0.2, rectangle);
         }
         group.setX(x + (rotated ? 200 : 0)).setY(y + (rotated ? 100 : 0)).setRotation(rotated ? Math.PI : 0);
     }
 
-    public void swap(CardView toTake) {
+    public void swap(CardView toTake, int playedMove) {
         int thisX = this.x;
         int thisY = this.y;
         this.x = toTake.x;
@@ -65,7 +67,7 @@ public class CardView {
         toTake.x = thisX;
         toTake.y = thisY;
         graphics.commitEntityState(0.5, this.group, toTake.group);
-        this.setLocation(true, true);
-        toTake.setLocation(false, false);
+        this.setLocation(true, false, playedMove);
+        toTake.setLocation(false, true, -1);
     }
 }

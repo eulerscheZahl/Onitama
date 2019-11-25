@@ -36,5 +36,11 @@
             <artifactId>module-tooltip</artifactId>
             <version>${gamengine.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.codingame.gameengine</groupId>
+            <artifactId>module-endscreen</artifactId>
+            <version>3.9.0</version>
+        </dependency>
     </dependencies>
 </project>

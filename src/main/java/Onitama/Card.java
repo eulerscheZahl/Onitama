@@ -22,8 +22,8 @@ public class Card {
         this.view = view;
     }
 
-    public void playCard(Card newCard) {
-        this.view.swap(newCard.view);
+    public void playCard(Card newCard, int moveIndex) {
+        this.view.swap(newCard.view, moveIndex);
     }
 
     public int getCardId() {

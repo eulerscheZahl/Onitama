@@ -15,6 +15,14 @@ public class Action {
         return figure;
     }
 
+    public Card getCard() {
+        return card;
+    }
+
+    public int getMove() {
+        return move;
+    }
+
     public boolean isValid(Cell[][] grid) {
         Cell to = getTargetCell();
         if (!Board.inGrid(to.getX(), to.getY())) return false;

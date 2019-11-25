@@ -1,5 +1,6 @@
 package com.codingame.game;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -11,6 +12,7 @@ import Onitama.view.BoardView;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.MultiplayerGameManager;
+import com.codingame.gameengine.module.endscreen.EndScreenModule;
 import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 import com.google.inject.Inject;
@@ -22,6 +24,8 @@ public class Referee extends AbstractReferee {
     private GraphicEntityModule graphicEntityModule;
     @Inject
     private TooltipModule tooltipModule;
+    @Inject
+    private EndScreenModule endScreenModule;
 
     static final Pattern PLAYER_PATTERN = Pattern.compile(
             "^(?<cardId>\\d+)\\s+(?<action>[A-E][1-5][A-E][1-5]|PASS)(?:\\s+(?<message>.+))?",
@@ -69,6 +73,19 @@ public class Referee extends AbstractReferee {
             opponent.setScore(1);
             gameManager.endGame();
         }
-
      }
+
+    @Override
+    public void onEnd() {
+        int[] scores = gameManager.getPlayers().stream().mapToInt(p -> p.getScore()).toArray();
+        String[] texts = new String[2];
+        for (int i = 0; i < scores.length; i++) {
+            texts[i] = scores[i] == 0 ? "Defeated" : "Winner";
+        }
+        endScreenModule.setScores(scores, texts);
+        String endSprite = "tie";
+        if (scores[0] > scores[1]) endSprite = "win0";
+        if (scores[0] < scores[1]) endSprite = "win1";
+        endScreenModule.setTitleRankingsSprite(endSprite + ".png");
+    }
 }

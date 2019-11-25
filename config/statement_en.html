@@ -75,36 +75,39 @@
         <p><span class="statement-lineno">Line 6 - 10:</span> the cards in use. A card is defined by:
         <ul>
           <li>
-            <const>owner</const>: <const>0</const> or <const>1</const> for the player, <const>-1</const> for the card in the center<br>
+            <var>owner</var>: <const>0</const> or <const>1</const> for the player, <const>-1</const> for the card in the center<br>
           </li>
           <li>
-            <const>cardId</const>: the id of the card<br>
+            <var>cardId</var>: the id of the card<br>
           </li>
         <li>
-          <const>dx1</const>: the x movement of the first action<br>
+          <var>dx1</var>: the x movement of the first action<br>
         </li>
         <li>
-          <const>dy1</const>: the y movement of the first action<br>
+          <var>dy1</var>: the y movement of the first action<br>
         </li>
         <li>
-          <const>dx2</const>: the x movement of the second action<br>
+          <var>dx2</var>: the x movement of the second action<br>
         </li>
         <li>
-          <const>dy2</const>: the y movement of the second action<br>
+          <var>dy2</var>: the y movement of the second action<br>
         </li>
         <li>
-          <const>dx3</const>: the x movement of the third action<br>
+          <var>dx3</var>: the x movement of the third action<br>
         </li>
         <li>
-          <const>dy3</const>: the y movement of the third action<br>
+          <var>dy3</var>: the y movement of the third action<br>
         </li>
         <li>
-          <const>dx4</const>: the x movement of the fourth action<br>
+          <var>dx4</var>: the x movement of the fourth action<br>
         </li>
         <li>
-          <const>dy4</const>: the y movement of the fourth action<br>
+          <var>dy4</var>: the y movement of the fourth action<br>
         </li>
-        </ul></p>
+        </ul> <br>
+        Note: if both <var>dx</var> and <var>dy</var> are 0, it does not denote a valid move (this is done to provide a valid code stub)</p>
+        <p><span class="statement-lineno">Line 11:</span> <var>actionCount</var>the number of possible actions</p>
+        <p><span class="statement-lineno">Next <var>actionCount</var> lines:</span> <var>cardId</var> <var>move</var> denoting a valid move</p>
       </div>
     </div>
 
@@ -113,7 +116,7 @@
       <div class="title">Output</div>
       <div class="text">
         <span class="statement-lineno">A single line</span> <action>cardID MOVE message</action> <br>
-        MOVE can be either a movement, giving source and destination cell (e.g. <action>A2B3</action> will move the figure from A2 to the cell B3) or <action>PASS</action> to perform no action.
+        MOVE can be either a movement, giving source and destination cell (e.g. <action>A2B3</action> will move the figure from A2 to the cell B3) or <action>PASS</action> to perform no action. <action>Message</action> is a text to display next to the avatar of the player.
         <br>
       </div>
     </div>
