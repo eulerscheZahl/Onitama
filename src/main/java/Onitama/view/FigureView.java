@@ -11,6 +11,8 @@ import com.codingame.gameengine.module.entities.Sprite;
 import com.codingame.gameengine.module.entities.SpriteAnimation;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
 
+import java.util.HashMap;
+
 public class FigureView {
     private Figure figure;
     private GraphicEntityModule graphics;
@@ -18,14 +20,38 @@ public class FigureView {
     private SpriteAnimation sprite;
     private MultiplayerGameManager<Player> gameManager;
 
+    private static HashMap<String, String[]> spritesheets = new HashMap<>();
+    private static int knightHeight = 232;
+    private static int wizardHeight = 238;
+    private static int[] knightWidth = {210, 220, 230, 240, 270, 315, 265};
+    private static int[] wizardWidth = {200, 200, 200, 200, 340, 200, 260};
+    private static String[] states = {"IDLE", "WALK", "RUN", "JUMP", "ATTACK", "DIE", "HURT"};
+
     private String[] getSprites(String state) {
-        String base = figure.isMaster() ? "W" : "K";
+        String base = figure.isMaster() ? "w" : "k";
         base += figure.getOwner().getIndex();
         base += state.charAt(0);
+        if (!spritesheets.containsKey(base)) {
+            int stateIndex = 0;
+            while (!state.equals(states[stateIndex])) stateIndex++;
+            int width = figure.isMaster() ? wizardWidth[stateIndex] : knightWidth[stateIndex];
+            int height = figure.isMaster() ? wizardHeight : knightHeight;
+            String[] sprites = graphics.createSpriteSheetSplitter()
+                    .setSourceImage(base + ".png")
+                    .setImageCount(5)
+                    .setWidth(width)
+                    .setHeight(height)
+                    .setOrigRow(0)
+                    .setOrigCol(0)
+                    .setImagesPerRow(5)
+                    .setName(base)
+                    .split();
+            spritesheets.put(base, sprites);
+        }
 
         String[] result = new String[6];
-        for (int i = 1; i <= 5; i++) result[i - 1] = base + i;
-        result[5] = base.substring(0, 2) + "I1";
+        for (int i = 0; i < 5; i++) result[i] = spritesheets.get(base)[i];
+        result[5] = spritesheets.get(base.substring(0, 2) + "I")[0];
         if (state.charAt(0) == 'D') result[5] = result[4]; // death doesn't end with IDLE
         return result;
     }
@@ -44,16 +70,19 @@ public class FigureView {
         this.graphics = graphicEntityModule;
         this.tooltips = tooltipModule;
 
-        sprite = graphics.createSpriteAnimation().setAnchorY(1)
-                .setImages(getSprites("IDLE")).setScale(0.7).setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150 + 135)
+        sprite = graphics.createSpriteAnimation()
+                .setImages(getSprites("IDLE")).setScale(0.7)
+                .setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150)
                 .setLoop(true).play();
         boardGroup.add(sprite);
         tooltips.setTooltipText(sprite, getTooltipText());
     }
 
     public void kill(Player killer) {
+        if (!figure.isMaster()) sprite.setX(sprite.getX() - 60);
         sprite.reset().setImages(getSprites("DIE")).setLoop(false).play();
         graphics.commitEntityState(0, sprite);
+        graphics.commitEntityState(0.8, sprite);
         sprite.setAlpha(0);
         tooltips.setTooltipText(sprite, "");
         if (figure.isMaster())
@@ -64,7 +93,7 @@ public class FigureView {
     public void move(boolean attack) {
         sprite.reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).setLoop(false).play();
         graphics.commitEntityState(0, sprite);
-        sprite.setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150 + 135);
+        sprite.setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150);
         sprite.reset().setImages(getSprites("IDLE")).setLoop(true).play();
         tooltips.setTooltipText(sprite, getTooltipText());
     }

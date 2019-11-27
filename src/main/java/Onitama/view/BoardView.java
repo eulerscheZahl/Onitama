@@ -22,7 +22,7 @@ public class BoardView {
         this.tooltips = tooltipModule;
 
         Group boardGroup = graphics.createGroup().setX(200).setY((1080 - 150 * Board.SIZE) / 2);
-        boardGroup.add(graphics.createSprite().setImage("board.png").setScale(1.45).setX(-135).setY(-137));
+        boardGroup.add(graphics.createSprite().setImage("board.png").setScale(1.47).setX(-140).setY(-145));
         Rectangle shrine0 = graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(70).setHeight(70).setX(375).setY(612).setAlpha(0.5).setFillColor(players.get(0).getColor());
         Rectangle shrine1 = graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(70).setHeight(70).setX(375).setY(12).setAlpha(0.5).setFillColor(players.get(1).getColor());
         boardGroup.add(shrine0, shrine1);
