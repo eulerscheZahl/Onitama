@@ -73,7 +73,7 @@ public class FigureView {
         sprite = graphics.createSpriteAnimation()
                 .setImages(getSprites("IDLE")).setScale(0.7)
                 .setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150)
-                .setLoop(true).play();
+                .setLoop(false).setPlaying(false);
         boardGroup.add(sprite);
         tooltips.setTooltipText(sprite, getTooltipText());
     }
@@ -91,10 +91,13 @@ public class FigureView {
     }
 
     public void move(boolean attack) {
-        sprite.reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).setLoop(false).play();
+        sprite.reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).play();
+        sprite.setAlpha(0.9999); // hacky workaround for SDK bug
         graphics.commitEntityState(0, sprite);
         sprite.setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150);
-        sprite.reset().setImages(getSprites("IDLE")).setLoop(true).play();
+        sprite.setAlpha(1);
         tooltips.setTooltipText(sprite, getTooltipText());
+        graphics.commitEntityState(0.999, sprite);
+        sprite.reset().setImages(getSprites("IDLE")).setPlaying(false);
     }
 }
