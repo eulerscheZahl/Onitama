@@ -21,6 +21,7 @@ public class BoardView {
         this.graphics = graphicEntityModule;
         this.tooltips = tooltipModule;
 
+        graphics.createSprite().setImage("japan.jpg").setScale(1920.0/2560).setAlpha(0.2).setAnchorX(0.5).setScaleX(-1).setX(1920/2);
         Group boardGroup = graphics.createGroup().setX(200).setY((1080 - 150 * Board.SIZE) / 2);
         boardGroup.add(graphics.createSprite().setImage("board.png").setScale(1.47).setX(-140).setY(-145));
         Rectangle shrine0 = graphicEntityModule.createRectangle().setRotation(Math.PI / 4).setWidth(70).setHeight(70).setX(375).setY(612).setAlpha(0.5).setFillColor(players.get(0).getColor());
@@ -36,18 +37,18 @@ public class BoardView {
             }
         }
 
-        new CardView(board.getCard(0, 0), graphicEntityModule, tooltipModule, 1350, 680, false);
-        new CardView(board.getCard(0, 1), graphicEntityModule, tooltipModule, 1650, 680, false);
-        new CardView(board.getCard(1, 0), graphicEntityModule, tooltipModule, 1350, 400, true);
-        new CardView(board.getCard(1, 1), graphicEntityModule, tooltipModule, 1650, 400, true);
+        new CardView(board.getCard(0, 0), graphicEntityModule, tooltipModule, 1300, 720, false);
+        new CardView(board.getCard(0, 1), graphicEntityModule, tooltipModule, 1700, 720, false);
+        new CardView(board.getCard(1, 0), graphicEntityModule, tooltipModule, 1300, 360, true);
+        new CardView(board.getCard(1, 1), graphicEntityModule, tooltipModule, 1700, 360, true);
         new CardView(board.getCard(-1, 0), graphicEntityModule, tooltipModule, 1500, 1080 / 2, false);
 
-        graphicEntityModule.createText(players.get(0).getNicknameToken()).setX(1300).setY(850).setZIndex(1).setFontSize(50).setFillColor(players.get(0).getColor());
-        players.get(0).setMessageBox(graphicEntityModule.createText("").setX(1500).setY(970).setZIndex(1).setFontSize(30).setFillColor(0xeeeeee));
+        graphicEntityModule.createText(players.get(0).getNicknameToken()).setX(1245).setY(850).setZIndex(1).setFontSize(50).setFillColor(players.get(0).getColor());
+        players.get(0).setMessageBox(graphicEntityModule.createText("").setX(1400).setY(970).setZIndex(1).setFontSize(30).setFillColor(0xeeeeee));
         graphicEntityModule.createSprite().setX(1300).setY(970).setImage(players.get(0).getAvatarToken()).setAnchor(0.5).setBaseHeight(110).setBaseWidth(110);
 
-        graphicEntityModule.createText(players.get(1).getNicknameToken()).setX(1300).setY(100).setZIndex(1).setFontSize(50).setFillColor(players.get(1).getColor());
-        players.get(1).setMessageBox(graphicEntityModule.createText("").setX(1500).setY(220).setZIndex(1).setFontSize(30).setFillColor(0xeeeeee));
-        graphicEntityModule.createSprite().setX(1300).setY(220).setImage(players.get(1).getAvatarToken()).setAnchor(0.5).setBaseHeight(110).setBaseWidth(110);
+        graphicEntityModule.createText(players.get(1).getNicknameToken()).setX(1245).setY(50).setZIndex(1).setFontSize(50).setFillColor(players.get(1).getColor());
+        players.get(1).setMessageBox(graphicEntityModule.createText("").setX(1400).setY(170).setZIndex(1).setFontSize(30).setFillColor(0xeeeeee));
+        graphicEntityModule.createSprite().setX(1300).setY(170).setImage(players.get(1).getAvatarToken()).setAnchor(0.5).setBaseHeight(110).setBaseWidth(110);
     }
 }

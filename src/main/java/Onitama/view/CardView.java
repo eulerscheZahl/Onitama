@@ -19,8 +19,18 @@ public class CardView {
     private Group group;
     private ArrayList<Rectangle> validMoves = new ArrayList<>();
 
+    private static final int RECT_SIZE = 20;
+    private static final int GRID_X  = 130;
+    private static final int GRID_Y  = 20;
+    private void drawGrid() {
+        for (int i = 0; i <= 5; i++) {
+            group.add(graphics.createLine().setX(GRID_X + RECT_SIZE * i).setY(GRID_Y).setX2(GRID_X + RECT_SIZE * i).setY2(GRID_Y + 5 * RECT_SIZE).setLineWidth(1));
+            group.add(graphics.createLine().setY(GRID_Y + RECT_SIZE * i).setX(GRID_X).setY2(GRID_Y + RECT_SIZE * i).setX2(GRID_X + 5 * RECT_SIZE).setLineWidth(1));
+        }
+    }
+
     private void drawRect(int dx, int dy, boolean move) {
-        Rectangle rect = graphics.createRectangle().setWidth(15).setHeight(15).setX(143 + 16 * dx).setY(43 - 16 * dy);
+        Rectangle rect = graphics.createRectangle().setWidth(RECT_SIZE).setHeight(RECT_SIZE).setX(GRID_X + RECT_SIZE * (dx + 2)).setY(GRID_Y - RECT_SIZE * (dy - 2));
         if (!move) rect.setFillColor(0x222222);
         else validMoves.add(rect);
         group.add(rect);
@@ -31,19 +41,20 @@ public class CardView {
         card.setView(this);
         this.graphics = graphicEntityModule;
         this.tooltips = tooltipModule;
-        this.x = x - 100;
-        this.y = y - 50;
+        this.x = x - 141;
+        this.y = y - 73;
         this.rotated = rotated;
 
         group = graphicEntityModule.createGroup();
-        group.add(graphics.createSprite().setImage("card.png"));
-        group.add(graphics.createText(String.valueOf(card.getCardId())).setX(50).setY(50).setAnchor(0.5).setFontSize(70));
+        group.add(graphics.createSprite().setImage("scroll.png"));
+        group.add(graphics.createText(String.valueOf(card.getCardId())).setX(75).setY(50).setAnchor(0.5).setFontSize(70));
         drawRect(0, 0, false);
         for (int i = 0; i < card.getxMove().size(); i++) {
             int dx = card.getxMove().get(i);
             int dy = card.getyMove().get(i);
             drawRect(dx, dy, true);
         }
+        drawGrid();
         setLocation(false, y != 1080 / 2, -1);
     }
 
@@ -56,7 +67,7 @@ public class CardView {
             rectangle.setFillColor(color);
             if (i != playedMove && playedMove != -1) graphics.commitEntityState(0.2, rectangle);
         }
-        group.setX(x + (rotated ? 200 : 0)).setY(y + (rotated ? 100 : 0)).setRotation(rotated ? Math.PI : 0);
+        group.setX(x + (rotated ? 283 : 0)).setY(y + (rotated ? 146 : 0)).setRotation(rotated ? Math.PI : 0);
     }
 
     public void swap(CardView toTake, int playedMove) {
