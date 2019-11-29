@@ -22,10 +22,12 @@
         The players have to protect a shrine, which is at the starting cell of their master. The game will end as a tie, if no player succeeds within <const>200</const> turns.<br><br>
         <strong>Cards</strong><br>
         Each player has <const>2</const> cards. A 5th card is in between both players. When a player uses one of his cards, he places it in the center and gets the other card from the center in return. <br>
-        A card gives a set of <const>2</const> to <const>4</const> possible move actions. <br> <br>
+        A card gives a set of <const>2</const> to <const>4</const> possible move actions. <br>
+        The card placed in the center will be rotated by 180 degrees. This gives each move a direction such as "forward", which translates to "up" or "down" depending on the player.
+         <br> <br>
         <strong>Moving units</strong><br>
         To move a unit, a player select one of his cards. He then chooses a move pattern defined by the card and applies it to a figure of his choice. <br>
-        The destination field must either be free or occupend by an opponent. The opponent on that cell will than get eliminated from the game. <br>
+        The destination field must either be free or occupied by an opponent. The opponent on that cell will than get eliminated from the game. <br>
         If there is no valid move, a player can <action>PASS</action> a card of his choice, effectively changing it with the center card without moving any unit.
       </div>
     </div>
@@ -107,7 +109,8 @@
           <var>dy4</var>: the y movement of the fourth action<br>
         </li>
         </ul>
-        Note: if both <var>dx</var> and <var>dy</var> are 0, it does not denote a valid move (this is done to provide a valid code stub)</p>
+        Note: if both <var>dx</var> and <var>dy</var> are 0, it does not denote a valid move (this is done to provide a valid code stub). <br>
+The current rotation of the card is addressed in the input: the <var>dx</var> and <var>dy</var> values of the next player using the card are given. When the card is played, both values will be multiplied by <const>-1</const>.</p>
         <p><span class="statement-lineno">Line 11:</span> <var>actionCount</var>the number of possible actions</p>
         <p><span class="statement-lineno">Next <var>actionCount</var> lines:</span> <var>cardId</var> <var>move</var> denoting a valid move</p>
       </div>
