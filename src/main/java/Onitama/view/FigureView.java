@@ -1,6 +1,7 @@
 package Onitama.view;
 
 import Onitama.Board;
+import Onitama.Cell;
 import Onitama.Figure;
 import com.codingame.game.Player;
 import com.codingame.gameengine.core.GameManager;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 
 public class FigureView {
     private Figure figure;
+    private Cell oldPosition;
     private GraphicEntityModule graphics;
     private TooltipModule tooltips;
     private SpriteAnimation sprite;
@@ -24,8 +26,24 @@ public class FigureView {
     private static int knightHeight = 232;
     private static int wizardHeight = 238;
     private static int[] knightWidth = {210, 220, 230, 240, 270, 315, 265};
-    private static int[] wizardWidth = {200, 200, 200, 200, 340, 200, 260};
+    private static int[] wizardWidth = {200, 200, 230, 200, 340, 200, 260};
     private static String[] states = {"IDLE", "WALK", "RUN", "JUMP", "ATTACK", "DIE", "HURT"};
+
+    public FigureView(Figure figure, MultiplayerGameManager<Player> gameManager, Group boardGroup, GraphicEntityModule graphicEntityModule, TooltipModule tooltipModule) {
+        this.figure = figure;
+        oldPosition = figure.getCell();
+        figure.setView(this);
+        this.gameManager = gameManager;
+        this.graphics = graphicEntityModule;
+        this.tooltips = tooltipModule;
+
+        sprite = graphics.createSpriteAnimation()
+                .setImages(getSprites("IDLE")).setScale(0.7)
+                .setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150)
+                .setLoop(false).setPlaying(false);
+        boardGroup.add(sprite);
+        tooltips.setTooltipText(sprite, getTooltipText());
+    }
 
     private String[] getSprites(String state) {
         String base = figure.isMaster() ? "w" : "k";
@@ -49,10 +67,8 @@ public class FigureView {
             spritesheets.put(base, sprites);
         }
 
-        String[] result = new String[6];
+        String[] result = new String[5];
         for (int i = 0; i < 5; i++) result[i] = spritesheets.get(base)[i];
-        result[5] = spritesheets.get(base.substring(0, 2) + "I")[0];
-        if (state.charAt(0) == 'D') result[5] = result[4]; // death doesn't end with IDLE
         return result;
     }
 
@@ -63,24 +79,9 @@ public class FigureView {
         return result;
     }
 
-    public FigureView(Figure figure, MultiplayerGameManager<Player> gameManager, Group boardGroup, GraphicEntityModule graphicEntityModule, TooltipModule tooltipModule) {
-        this.figure = figure;
-        figure.setView(this);
-        this.gameManager = gameManager;
-        this.graphics = graphicEntityModule;
-        this.tooltips = tooltipModule;
-
-        sprite = graphics.createSpriteAnimation()
-                .setImages(getSprites("IDLE")).setScale(0.7)
-                .setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150)
-                .setLoop(false).setPlaying(false);
-        boardGroup.add(sprite);
-        tooltips.setTooltipText(sprite, getTooltipText());
-    }
-
     public void kill(Player killer) {
-        if (!figure.isMaster()) sprite.setX(sprite.getX() - 60);
-        sprite.reset().setImages(getSprites("DIE")).setLoop(false).play();
+        if (!figure.isMaster() && sprite.getScaleX() > 0) sprite.setX(sprite.getX() - 60);
+        sprite.setZIndex(1).reset().setImages(getSprites("DIE")).setLoop(false).play();
         graphics.commitEntityState(0, sprite);
         graphics.commitEntityState(0.8, sprite);
         sprite.setAlpha(0);
@@ -90,14 +91,27 @@ public class FigureView {
         else gameManager.addTooltip(killer, String.format("%s captured a student", killer.getNicknameToken()));
     }
 
+    private void setSpritePosition(Cell cell) {
+        sprite.setY((Board.SIZE - 1 - cell.getY()) * 150);
+        int spriteX = cell.getX() * 150;
+        if (sprite.getScaleX() > 0) sprite.setAnchorX(0).setX(spriteX);
+        else sprite.setAnchorX(1).setX(spriteX);
+    }
+
     public void move(boolean attack) {
-        sprite.reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).play();
-        sprite.setAlpha(0.9999); // hacky workaround for SDK bug
+        double scale = Math.abs(sprite.getScaleX());
+        if (oldPosition.getX() > figure.getCell().getX()) sprite.setScaleX(-scale);
+        else if (oldPosition.getX() < figure.getCell().getX()) sprite.setScaleX(scale);
+        sprite.setZIndex(2).reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).play();
+        setSpritePosition(oldPosition);
+        sprite.setAlpha(0.9999); // hacky workaround for SDK bug, won't play animation otherwise
         graphics.commitEntityState(0, sprite);
-        sprite.setX(figure.getCell().getX() * 150).setY((Board.SIZE - 1 - figure.getCell().getY()) * 150);
+        setSpritePosition(figure.getCell());
         sprite.setAlpha(1);
         tooltips.setTooltipText(sprite, getTooltipText());
         graphics.commitEntityState(0.999, sprite);
-        sprite.reset().setImages(getSprites("IDLE")).setPlaying(false);
+        sprite.setZIndex(0).reset().setImages(getSprites("IDLE")).setPlaying(false);
+        setSpritePosition(figure.getCell());
+        oldPosition = figure.getCell();
     }
 }

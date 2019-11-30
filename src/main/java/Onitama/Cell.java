@@ -26,6 +26,10 @@ public class Cell {
         return y;
     }
 
+    public int dist(Cell cell) {
+        return Math.abs(this.x - cell.x) + Math.abs(this.y - cell.y);
+    }
+
     public String printCoord() {
         return "" + (char)(x+'A') + (char)(y+'1');
     }
