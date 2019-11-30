@@ -91,11 +91,16 @@ public class FigureView {
         else gameManager.addTooltip(killer, String.format("%s captured a student", killer.getNicknameToken()));
     }
 
-    private void setSpritePosition(Cell cell) {
+    private void setSpritePosition(Cell cell, String state) {
+        int stateIndex = 0;
+        while (!state.equals(states[stateIndex])) stateIndex++;
+        int width = figure.isMaster() ? wizardWidth[stateIndex] : knightWidth[stateIndex];
+        int idleWidth = figure.isMaster() ? wizardWidth[0] : knightWidth[0];
+
         sprite.setY((Board.SIZE - 1 - cell.getY()) * 150);
         int spriteX = cell.getX() * 150;
         if (sprite.getScaleX() > 0) sprite.setAnchorX(0).setX(spriteX);
-        else sprite.setAnchorX(1).setX(spriteX);
+        else sprite.setAnchorX(1).setX(spriteX - (int) (150.0 / idleWidth * (width - idleWidth)));
     }
 
     public void move(boolean attack) {
@@ -103,15 +108,15 @@ public class FigureView {
         if (oldPosition.getX() > figure.getCell().getX()) sprite.setScaleX(-scale);
         else if (oldPosition.getX() < figure.getCell().getX()) sprite.setScaleX(scale);
         sprite.setZIndex(2).reset().setImages(getSprites(attack ? "ATTACK" : "RUN")).play();
-        setSpritePosition(oldPosition);
+        setSpritePosition(oldPosition, attack ? "ATTACK" : "RUN");
         sprite.setAlpha(0.9999); // hacky workaround for SDK bug, won't play animation otherwise
         graphics.commitEntityState(0, sprite);
-        setSpritePosition(figure.getCell());
+        setSpritePosition(figure.getCell(), attack ? "ATTACK" : "RUN");
         sprite.setAlpha(1);
         tooltips.setTooltipText(sprite, getTooltipText());
         graphics.commitEntityState(0.999, sprite);
         sprite.setZIndex(0).reset().setImages(getSprites("IDLE")).setPlaying(false);
-        setSpritePosition(figure.getCell());
+        setSpritePosition(figure.getCell(), "IDLE");
         oldPosition = figure.getCell();
     }
 }
