@@ -50,6 +50,15 @@ public class Board {
             cardSet.remove(random.nextInt(cardSet.size()));
         }
 
+        // shuffle cards
+        for (int i = cardSet.size() - 1; i > 0; i--)
+        {
+            int index = random.nextInt(i + 1);
+            Card tmp = cardSet.get(index);
+            cardSet.set(index, cardSet.get(i));
+            cardSet.set(i, tmp);
+        }
+
         playerCards.add(new ArrayList<>());
         playerCards.get(0).add((cardSet.get(0)));
         playerCards.get(0).add((cardSet.get(1)));
