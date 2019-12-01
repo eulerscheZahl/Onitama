@@ -109,7 +109,7 @@ public class CardView {
         toTake.setLocation(false, true, -1, 0, false);
 
         if (shiftedRotation) {
-            graphics.commitEntityState(0.999, innerGroup, group);
+            graphics.commitEntityState(0.9999, innerGroup, group);
             innerGroup.setX(0);
             group.setX(group.getX() + offset);
         }

@@ -18,6 +18,10 @@ public class Card {
         cardId = cardCounter++;
     }
 
+    public static void resetId() {
+        cardCounter = 0;
+    }
+
     public void setView(CardView view) {
         this.view = view;
     }
